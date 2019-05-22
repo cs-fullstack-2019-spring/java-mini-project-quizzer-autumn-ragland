@@ -3,13 +3,15 @@ import java.util.*;
 
 public class Main {
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+
     public static void main(String[] args) {
         Scanner read = new Scanner(System.in);
 //        prompt user for name
         System.out.print("Please Enter Your Name: ");
         String userName = read.nextLine();
-
-        System.out.println("User: " + userName);
 
 //        create hashmap of questions with position keys
         HashMap<Integer, String> quizSet = new HashMap<>();
@@ -22,8 +24,7 @@ public class Main {
             while (readFile.hasNextLine()){
                 String txt = readFile.nextLine();
                 Integer indexPosition = count;
-                String question = txt;
-                quizSet.put(indexPosition,question);
+                quizSet.put(indexPosition,txt);
                 count ++;
             }
         }
@@ -33,16 +34,65 @@ public class Main {
 //        hashmap for random questions
         HashMap<Integer, String> randomSet = new HashMap<>();
 //        prompt user with randomized questions
-        for (int i : printRandomNumbers(5,6)) {
-            if(quizSet.get(i) != null){
-                Integer count = 0;
-                System.out.println(quizSet.get(i));
-                randomSet.put(count,quizSet.get(i));
-                String answer = read.nextLine();
-                count ++;
+        Integer count = 0;
+        Integer correctAnswer =0;
+        for (int i : printRandomNumbers(5,5)) {
+//            System.out.println(i);
+//            System.out.println(quizSet.get(i));
+            randomSet.put(count,quizSet.get(i));
+//            formatQuestions(randomSet.get(count))
+            if(formatQuestions(randomSet.get(count))){
+                correctAnswer ++;
             }
+            count ++;
         }
-        System.out.println("Thanks " + userName);
+        System.out.println(userName + " you score is " + correctAnswer + "/5");
+    }
+
+    private static Boolean formatQuestions(String questionSet){
+
+        Scanner read = new Scanner(System.in);
+
+//        parse question set into question, choices, and correct answer
+        String question = questionSet.split(",")[0];
+        String choiceA = questionSet.split(",")[1];
+        String choiceB = questionSet.split(",")[2];
+        String choiceC = questionSet.split(",")[3];
+        String choiceD = questionSet.split(",")[4];
+        String answer = questionSet.split(",")[5];
+
+//        prompt user with question and choices and grab their answer
+        System.out.println(ANSI_CYAN + question.toUpperCase() + ANSI_RESET);
+        System.out.println("A. " + choiceA);
+        System.out.println("B. " + choiceB);
+        System.out.println("C. " + choiceC);
+        System.out.println("D. " + choiceD);
+        String userAnswer = read.nextLine();
+
+        Boolean quizScore=false;
+
+//        check the user answer to see if it is correct
+        if(userAnswer.toLowerCase().equals("a") && answer.equals("1")){
+            quizScore =true;
+            System.out.println(ANSI_YELLOW +"CORRECT"+ ANSI_RESET);
+        }
+        else if(userAnswer.toLowerCase().equals("b") && answer.equals("2")){
+            quizScore =true;
+            System.out.println(ANSI_YELLOW +"CORRECT"+ ANSI_RESET);
+        }
+        else if(userAnswer.toLowerCase().equals("c") && answer.equals("3")){
+            quizScore =true;
+            System.out.println(ANSI_YELLOW +"CORRECT"+ ANSI_RESET);
+        }
+        else if(userAnswer.toLowerCase().equals("d") && answer.equals("4")){
+            quizScore =true;
+            System.out.println(ANSI_YELLOW +"CORRECT"+ ANSI_RESET);
+        }
+        else{
+            System.out.println(ANSI_YELLOW +"INCORRECT"+ ANSI_RESET);
+        }
+
+       return quizScore;
     }
 
 //    get some amount of random numbers (n) between some range(maxRange)
